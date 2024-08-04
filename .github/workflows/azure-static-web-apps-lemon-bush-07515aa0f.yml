@@ -1,9 +1,32 @@
+name: Azure Static Web Apps CI/CD
+
+on:
+  push:
+    branches:
+      - main  # Set this to the branch you want to deploy
+
 jobs:
   build_and_deploy_job:
+    runs-on: ubuntu-latest
+    name: Build and Deploy Job
     steps:
-    - name: Build And Deploy
+    - name: Checkout the repository
+      uses: actions/checkout@v2
+
+    - name: Build the app
+      run: |
+        npm install
+        npm run build
+
+    - name: Deploy to Azure Static Web Apps
+      id: deploy
       uses: Azure/static-web-apps-deploy@v1
       with:
         azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
-        app_location: "/" # Adjust this path to the root of your application or where index.html is located
-        output_location: "/build" # Adjust this if your build output is different
+        app_location: "/" # Location of the source code
+        output_location: "build" # Location of the built files
+
+    - name: Azure Static Web Apps Debug Information
+      run: |
+        echo "App Location: ${{ github.event.inputs.app_location }}"
+        echo "Output Location: ${{ github.event.inputs.output_location }}"
