@@ -25,7 +25,6 @@ jobs:
         run: npm run build
 
       - name: Deploy
-        if: ${{ secrets.DEPLOYMENT_TOKEN != '' }}
         env:
           DEPLOYMENT_TOKEN: ${{ secrets.DEPLOYMENT_TOKEN }}
         run: |
@@ -39,4 +38,4 @@ jobs:
           echo "Deploying with token"
       - name: Skip Deployment
         if: ${{ secrets.DEPLOYMENT_TOKEN == '' && env.SKIP_DEPLOY_ON_MISSING_SECRETS == 'true' }}
-        run: echo "Skipping deployment because deployment_token was not provided and skip_deploy_on_missing_secrets is set to true."
+        run: echo "Skipping deployment because deployment_token was 
