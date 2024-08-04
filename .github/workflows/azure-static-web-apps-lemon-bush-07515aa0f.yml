@@ -24,6 +24,13 @@ jobs:
       - name: Build project
         run: npm run build
 
+      - name: Check Deployment Token
+        run: |
+          if [ -z "${{ secrets.DEPLOYMENT_TOKEN }}" ]; then
+            echo "Deployment token is missing. Skipping deployment."
+            exit 0
+          fi
+
       - name: Deploy
         if: ${{ secrets.DEPLOYMENT_TOKEN != '' }}
         env:
@@ -32,7 +39,3 @@ jobs:
           echo "DeploymentId: $(uuidgen)"
           # Add your deployment commands here
           echo "Deploying with token"
-
-      - name: Skip Deployment
-        if: ${{ secrets.DEPLOYMENT_TOKEN == '' }}
-        run: echo "Skipping deployment because deployment_token was not provided."
