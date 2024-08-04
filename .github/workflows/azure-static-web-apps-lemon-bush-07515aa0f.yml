@@ -25,17 +25,14 @@ jobs:
         run: npm run build
 
       - name: Deploy
+        if: ${{ secrets.DEPLOYMENT_TOKEN != '' }}
         env:
           DEPLOYMENT_TOKEN: ${{ secrets.DEPLOYMENT_TOKEN }}
         run: |
           echo "DeploymentId: $(uuidgen)"
-          if [ -z "$DEPLOYMENT_TOKEN" ]; then
-            echo "deployment_token was not provided."
-            echo "The deployment_token is required for deploying content. If you'd like to continue the run without deployment, add the configuration skip_deploy_on_missing_secrets set to true in your workflow file"
-            exit 1
-          fi
           # Add your deployment commands here
           echo "Deploying with token"
+
       - name: Skip Deployment
-        if: ${{ secrets.DEPLOYMENT_TOKEN == '' && env.SKIP_DEPLOY_ON_MISSING_SECRETS == 'true' }}
-        run: echo "Skipping deployment because deployment_token was 
+        if: ${{ secrets.DEPLOYMENT_TOKEN == '' }}
+        run: echo "Skipping deployment because deployment_token was not provided."
